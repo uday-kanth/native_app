@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, View,TouchableOpacity,TextInput,Button} from "react-native";
 import {openDatabase} from 'react-native-sqlite-storage'
 import { Picker} from "@react-native-picker/picker";
+import DatePicker from "react-native-date-picker";
 
 
 const db=openDatabase({
@@ -12,16 +13,23 @@ const Addnotes=({notesList,setNotesList,getNotes})=>{
     
     const [title,setTitle]=useState();
     const [description,setDescription]=useState();
-    const [selectedValue, setSelectedValue] = useState('');
+    const [selectedValue, setSelectedValue] = useState('low');
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+    
+
+
+
+
     const addNote=()=>{
         if(!title || !description){
             alert("enter the details");
             return;
         }
         db.transaction(txn=>{
-            const query=`INSERT INTO notes(title,description) VALUES(?,?)`;
+            const query=`INSERT INTO notes(title,description,priority,viewed) VALUES(?,?,?,?)`;
             console.log(query)
-            txn.executeSql(query,[title,description],
+            txn.executeSql(query,[title,description,selectedValue,false],
                 (sqltxn,res)=>{
                     //console.log(`added ${JSON.stringify(res)}`);
                     getNotes();
@@ -30,6 +38,10 @@ const Addnotes=({notesList,setNotesList,getNotes})=>{
                     console.log(error.message)
                 });
         })
+
+        setTitle("");
+        setDescription("")
+        setSelectedValue('low')
     }
 
     return(
@@ -39,13 +51,13 @@ const Addnotes=({notesList,setNotesList,getNotes})=>{
         <Text style={styles.content}>Fill the details to add the Note</Text>
         </View>
 
-            <View>
+            <View style={{marginVertical:20}}>
             <TextInput label="Title" style={styles.input} placeholder="Title" value={title} onChangeText={setTitle} ></TextInput>
-            <TextInput style={styles.input} placeholder="Description" value={description} onChangeText={setDescription} ></TextInput>
+            <TextInput multiline={true} style={{...styles.input,height:200,overflow:"scroll"}} placeholder="Description" value={description} onChangeText={setDescription} ></TextInput>
             <View>
-            <Text style={styles.content}>Select an option:</Text>
+            <Text style={{marginVertical:20,...styles.content}}>Select an option:</Text>
             <Picker
-             style={{height:"200",width:"100"}}
+             style={{height:"200",width:"100",}}
                 selectedValue={selectedValue}
                 onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
             >
@@ -53,10 +65,32 @@ const Addnotes=({notesList,setNotesList,getNotes})=>{
                 <Picker.Item label="medium" value="medium" />
                 <Picker.Item label="high" value="high" />
             </Picker>
-            <Text style={styles.content}>Selected Value: {selectedValue}</Text>
     </View>
-            <Button title="ADD" onPress={addNote} />
+
+
+    
+
+
+
+
+
+
+
+
+
+
             </View>
+            <Button title="ADD" onPress={addNote} />
+
+
+            
+
+
+
+
+
+
+
         </View>
 
 
@@ -91,7 +125,7 @@ const styles=StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
         paddingHorizontal: 10,
-        marginVertical:10,
+        marginVertical:20,
         borderRadius:30,
 
     }

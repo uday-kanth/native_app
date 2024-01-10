@@ -35,12 +35,12 @@ export default()=>{
                         
                         for(let i=0;i<len;i++){
                           let item=res.rows.item(i);
-                          response.push({id:item.id,title:item.title,description:item.description})
+                          response.push({id:item.id,title:item.title,description:item.description,priority:item.priority,viewed:item.viewed,completed:item.completed})
                         }
                       }
                   },
                   (error)=>{
-                      console.log("there is an error in useTasks")
+                      console.log("there is an error in useTasks"+error.message)
             
                   }
                   )

@@ -11,9 +11,10 @@ const navigator=createStackNavigator({
 {
   initialRouteName:"Home",
   defaultNavigationOptions:{
-    title:"My_Note"
+    title:"My_Note",
   }
-}
+},
+
 
 );
 

@@ -1,4 +1,4 @@
-import { StyleSheet, View ,TouchableOpacity,Text} from "react-native"
+import { StyleSheet, View ,TouchableOpacity,Text,StatusBar} from "react-native"
 import Header from "../components/Header"
 import Search from "../components/Search"
 import Category from "../components/Category"
@@ -23,7 +23,7 @@ const  [page,setPage]=useState(1);
 
   useEffect(()=>{
     getNotes();
-  },[notesList]);
+  },[notesList,page]);
   const [notesList,setNotesList]=useState([])
   const [completedList,setCompletedList]=useState([])
   
@@ -33,13 +33,13 @@ const  [page,setPage]=useState(1);
     
     db.transaction(txn=>{
       txn.executeSql(
-          `create table if not exists notes(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR(20),description TEXT)`,
+          `create table if not exists notes(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR(20),description TEXT , priority VARCHAR(20),viewed BOOLEAN,completed BOOLEAN)`,
           [],
           (sqltxn,res)=>{
               console.log("table created successfully")
           },
           (error)=>{
-              console.log("there is an error")
+              console.log("there is an error in normal table creation"+error.message)
 
           }
           )
@@ -51,13 +51,13 @@ const  [page,setPage]=useState(1);
     
     db.transaction(txn=>{
       txn.executeSql(
-          `create table if not exists completed(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR(20),description TEXT)`,
+          `create table if not exists completed(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR(20),description TEXT, priority VARCHAR(20),viewed BOOLEAN,completed BOOLEAN)`,
           [],
           (sqltxn,res)=>{
               console.log("table created successfully")
           },
           (error)=>{
-              console.log("there is an error")
+              console.log("there is an error in complete table creation")
 
           }
           )
@@ -86,7 +86,7 @@ const  [page,setPage]=useState(1);
               let results=[]
               for(let i=0;i<len;i++){
                 let item=res.rows.item(i);
-                results.push({id:item.id,title:item.title,description:item.description})
+                results.push({id:item.id,title:item.title,description:item.description,priority:item.priority,viewed:item.viewed,completed:item.completed})
               }
               // console.log(" haha" + results)
               
@@ -122,7 +122,7 @@ const  [page,setPage]=useState(1);
               let results=[]
               for(let i=0;i<len;i++){
                 let item=res.rows.item(i);
-                results.push({id:item.id,title:item.title,description:item.description})
+                results.push({id:item.id,title:item.title,description:item.description,priority:item.priority,viewed:item.viewed,completed:item.completed})
               }
               // console.log(" haha" + results)
               
@@ -199,15 +199,16 @@ const  [page,setPage]=useState(1);
         
 <SafeAreaView>
         <View style={style.container}>
+        <StatusBar backgroundColor="#03045e" barStyle="light-content" />
 
 {page===1 &&  <View>
 
-        <Header></Header>
+        {/* <Header></Header> */}
         <Search SetTerm={SetTerm} ></Search>
          {/* <Category CategoryList={CategoryList} SetTerm={SetTerm} term={term}/> */}
 
         <Bar setPage={setPage}></Bar>
-        <Tasks term={term} status={page}></Tasks> 
+        <Tasks term={term} status={page} getNotes={getNotes}></Tasks> 
 </View>
 }
 
@@ -224,7 +225,7 @@ const  [page,setPage]=useState(1);
 <View>
 <Search SetTerm={SetTerm} ></Search>
 <Bar setPage={setPage}></Bar>
-<Tasks term={term} status={page}></Tasks>
+<Tasks term={term} status={page} getNotes={getNotes}></Tasks>
 </View>
 }
 
@@ -236,8 +237,9 @@ const  [page,setPage]=useState(1);
 
 const style=StyleSheet.create({
     container:{
-        backgroundColor:"#f5ebe0",
-        color:"black"
+        backgroundColor:"#caf0f8",
+        color:"black",
+        height:"100%",
     }
 })
 

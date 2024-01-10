@@ -1,6 +1,7 @@
 import { View,Text,StyleSheet,TouchableOpacity } from "react-native"
 import { SafeAreaView } from "react-navigation"
 import {openDatabase} from 'react-native-sqlite-storage'
+import { useEffect } from "react";
 const db=openDatabase({
     name:"NotesDB"
 });
@@ -8,15 +9,16 @@ const db=openDatabase({
 const Taskscreen=({navigation})=>{
     const title=navigation.getParam("title")
     const description=navigation.getParam("description")
+    const priority=navigation.getParam("priority")
     const index=navigation.getParam('id')
-    
+    const completed=navigation.getParam('completed')
 
     const addNoteCompleted=async()=>{
 
         await db.transaction(txn=>{
-            const query=`INSERT INTO completed(title,description) VALUES(?,?)`;
+            const query=`INSERT INTO completed(title,description,priority,viewed,completed) VALUES(?,?,?,?,?)`;
             //console.log(query)
-            txn.executeSql(query,[title,description],
+            txn.executeSql(query,[title,description,priority,true,true],
                 (sqltxn,res)=>{
                     //console.log(`added ${JSON.stringify(res)}`);
         
@@ -32,18 +34,20 @@ const Taskscreen=({navigation})=>{
 
     let query=`DELETE FROM notes WHERE id=${index}`
     const response=[]
-    const deleteNote=()=>{
+    const deleteNote=async (status)=>{
 
         db.transaction(txn=>{
           txn.executeSql(
           query,
           [],
           (sqltxn,res)=>{
+            if(status){
             addNoteCompleted();
+            }
               console.log("row deleted successfully")
           },
           (error)=>{
-              console.log("there is an error in useTasks")
+              console.log("there is an error in delete ")
     
           }
           )
@@ -72,12 +76,25 @@ const Taskscreen=({navigation})=>{
         <Text style={{color:"black"}}>Back</Text>
         </View>
         </TouchableOpacity>
+{   completed===0 &&
+        <TouchableOpacity onPress={()=>{deleteNote(1)}}>
+        <View style={style.button}>
+        <Text style={{color:"black"}}>Mark as Complete</Text>
+        </View>
+        </TouchableOpacity>
+
+}
+
+{ completed===0 &&
 
         <TouchableOpacity onPress={()=>{deleteNote()}}>
         <View style={style.button}>
         <Text style={{color:"black"}}>Delete</Text>
         </View>
         </TouchableOpacity>
+}
+
+        
 
         
         </View>
@@ -111,7 +128,7 @@ const style=StyleSheet.create({
         borderRadius:30,
         justifyContent:"center",
         alignItems:"center",
-        margin:50,
+        margin:20,
         padding:20,
         color:"black"
     },
@@ -120,6 +137,7 @@ const style=StyleSheet.create({
         display:"flex",
         flexDirection:"row",
         justifyContent:"space-around",
+        marginHorizontal:20,
     }
 
 

@@ -41,7 +41,7 @@ const style=StyleSheet.create({
         display:"flex",
         flexDirection:"row",
         justifyContent:"space-evenly",
-        backgroundColor:"#b08968",
+        backgroundColor:"#0077b6",
         fontSize:20,
         marginVertical:20,
   
@@ -51,7 +51,9 @@ const style=StyleSheet.create({
       Baritem:{
         margin:10,
         padding:10,
-        fontSize:20
+        fontSize:20,
+        color:"white",
+        fontWeight:"500"
       }
     
 })

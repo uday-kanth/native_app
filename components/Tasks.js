@@ -6,7 +6,7 @@ import TaskItem from "./TaskItem";
 
 
 
-const Tasks=({term,status})=>{
+const Tasks=({term,status,getNotes})=>{
  
 const [{data,loading,error},searchTask]=useTasks();
 useEffect(()=>{
@@ -36,10 +36,10 @@ else{
 
     return(
         <View style={style.container}>
-           <Text style={style.header}>Important Tasks</Text>
+           <Text style={style.header}>Tasks</Text>
            <FlatList data={data} 
            style={{marginVertical:30}}
-           renderItem={({item})=>{ console.log(item); return( <TaskItem taskdata={item}></TaskItem>)}}
+           renderItem={({item})=>{ console.log(item); return( <TaskItem taskdata={item} getNotes={getNotes}></TaskItem>)}}
            keyExtractor={(item)=>item.id}
             />
         </View>
