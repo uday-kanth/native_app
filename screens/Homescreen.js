@@ -204,17 +204,17 @@ const  [page,setPage]=useState(1);
 {page===1 &&  <View>
 
         {/* <Header></Header> */}
+        <Bar page={page} setPage={setPage}></Bar>
         <Search SetTerm={SetTerm} ></Search>
          {/* <Category CategoryList={CategoryList} SetTerm={SetTerm} term={term}/> */}
 
-        <Bar setPage={setPage}></Bar>
         <Tasks term={term} status={page} getNotes={getNotes}></Tasks> 
 </View>
 }
 
 {page===0 &&
 <View>
-<Bar setPage={setPage}></Bar>
+<Bar setPage={setPage} page={page}></Bar>
 <Addnotes notesList={notesList} setNotesList={setNotesList} getNotes={getNotes} ></Addnotes>
 
 
@@ -223,8 +223,8 @@ const  [page,setPage]=useState(1);
 
 {page===2 &&
 <View>
+<Bar page={page} setPage={setPage}></Bar>
 <Search SetTerm={SetTerm} ></Search>
-<Bar setPage={setPage}></Bar>
 <Tasks term={term} status={page} getNotes={getNotes}></Tasks>
 </View>
 }
