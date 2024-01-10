@@ -13,6 +13,9 @@ const Taskscreen=({navigation})=>{
     const index=navigation.getParam('id')
     const completed=navigation.getParam('completed')
 
+
+    console.log(completed)
+
     const addNoteCompleted=async()=>{
 
         await db.transaction(txn=>{

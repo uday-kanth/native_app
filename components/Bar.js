@@ -6,7 +6,7 @@ const Bar = ({ setPage, page }) => {
     <View style={styles.bar}>
       <TouchableOpacity onPress={() => setPage(0)}>
         <View style={[styles.barItem, page === 0 && styles.selectedBarItem]}>
-          <Text style={styles.barItemText}>New</Text>
+          <Text style={styles.barItemText}>Add_task</Text>
         </View>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setPage(1)}>

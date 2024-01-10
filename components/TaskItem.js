@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { elevation } from "./common/styles";
 import { withNavigation } from "react-navigation";
 import {openDatabase} from 'react-native-sqlite-storage'
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const db=openDatabase({
     name:"NotesDB"
@@ -25,10 +26,10 @@ const TaskItem = ({ taskdata,getNotes, navigation }) => {
   const markView=async()=>{
     await db.transaction(txn=>{
         const query=`UPDATE notes SET viewed = true WHERE id = ${taskdata.id};`;
-        //console.log(query)
         txn.executeSql(query,[],
             (sqltxn,res)=>{
-                //console.log(`added ${JSON.stringify(res)}`);
+                console.log("marked as view");
+                getNotes();
     
             },(error)=>{
                 console.log(error.message)
@@ -42,7 +43,7 @@ const TaskItem = ({ taskdata,getNotes, navigation }) => {
 
 
   return (
-    <TouchableOpacity onPress={() => {markView();getNotes(); navigation.navigate("Task", taskdata); }}>
+    <TouchableOpacity onPress={() => {markView();navigation.navigate("Task", taskdata); }}>
       <View style={[style.container, style.elevation]}>
         <View style={{ backgroundColor: priorityColor, ...style.priorityBox }}>
           <Text style={style.priority}></Text>

@@ -27,11 +27,10 @@ const Addnotes=({notesList,setNotesList,getNotes})=>{
             return;
         }
         db.transaction(txn=>{
-            const query=`INSERT INTO notes(title,description,priority,viewed) VALUES(?,?,?,?)`;
+            const query=`INSERT INTO notes(title,description,priority,viewed,completed) VALUES(?,?,?,?,?)`;
             console.log(query)
-            txn.executeSql(query,[title,description,selectedValue,false],
+            txn.executeSql(query,[title,description,selectedValue,false,false],
                 (sqltxn,res)=>{
-                    //console.log(`added ${JSON.stringify(res)}`);
                     getNotes();
         
                 },(error)=>{
